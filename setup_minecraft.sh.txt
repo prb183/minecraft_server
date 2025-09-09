@@ -7,7 +7,7 @@
 # --- CONFIGURE THESE ---
 GITHUB_REPO="https://github.com/YOUR_USERNAME/minecraft-server.git"  # change this
 SERVER_DIR=~/minecraft_server
-FORGE_VERSION="1.20.1-47.1.0"    # change to your Forge version
+FORGE_VERSION="1.20.1-47.4.1"    # change to your Forge version
 MAX_RAM="4G"
 MIN_RAM="2G"
 SCREEN_NAME="mcserver"
