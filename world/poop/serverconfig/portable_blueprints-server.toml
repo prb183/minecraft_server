@@ -1,0 +1,3 @@
+#Blacklist of block IDs ignored by the scanner and blueprints (example: ["minecraft:stone", "minecraft:dirt"] )
+blacklistBlocks = []
+

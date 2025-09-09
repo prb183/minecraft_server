@@ -1,0 +1,52 @@
+#!/bin/bash
+# =========================================
+# Automated Forge Minecraft Server Setup
+# Pulls mods and world from GitHub and starts server
+# =========================================
+
+# --- CONFIGURE THESE ---
+GITHUB_REPO="https://github.com/YOUR_USERNAME/minecraft-server.git"  # change this
+SERVER_DIR=~/minecraft_server
+FORGE_VERSION="1.20.1-47.1.0"    # change to your Forge version
+MAX_RAM="4G"
+MIN_RAM="2G"
+SCREEN_NAME="mcserver"
+
+# --- Step 0: Install required packages ---
+sudo apt update
+sudo apt install -y git unzip screen openjdk-17-jdk
+
+# --- Step 1: Create server directory ---
+mkdir -p $SERVER_DIR
+cd $SERVER_DIR
+
+# --- Step 2: Clone GitHub repo ---
+echo "Cloning GitHub repository..."
+git clone $GITHUB_REPO repo_temp
+cd repo_temp
+
+# --- Step 3: Copy mods and world ---
+echo "Copying mods and world..."
+mkdir -p $SERVER_DIR/mods
+cp -r mods/* $SERVER_DIR/mods/
+if [ -d "world" ]; then
+    cp -r world/* $SERVER_DIR/
+elif [ -f "world.zip" ]; then
+    unzip world.zip -d $SERVER_DIR
+fi
+
+# --- Step 4: Make sure Forge server is installed ---
+if [ ! -f "$SERVER_DIR/forge-$FORGE_VERSION.jar" ]; then
+    echo "Please upload forge-$FORGE_VERSION-installer.jar to $SERVER_DIR"
+    exit 1
+fi
+
+# --- Step 5: Accept EULA ---
+echo "eula=true" > $SERVER_DIR/eula.txt
+
+# --- Step 6: Start server in a screen session ---
+echo "Starting Minecraft server..."
+screen -dmS $SCREEN_NAME java -Xmx$MAX_RAM -Xms$MIN_RAM -jar $SERVER_DIR/forge-$FORGE_VERSION.jar nogui
+
+echo "Server started in screen session '$SCREEN_NAME'."
+echo "Use 'screen -r $SCREEN_NAME' to attach and 'Ctrl+A D' to detach."
